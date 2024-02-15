@@ -19,7 +19,9 @@ public class MainController {
 	@Autowired
 	private MainDAO mainDAO;
 	@Autowired
-	private AdminDAO adminDAO;
+	private AdminDAO adminDAO;	
+	@Autowired
+	private CalendarDAO calendarDAO;
 	
 	
 	 @RequestMapping( value="/adminMain.do")
@@ -68,15 +70,39 @@ public class MainController {
 	@RequestMapping( value="/teaMain.do")
 	public ModelAndView teaMain(
 			ExamDTO examDTO,
-			HttpSession session
-		){
+			DayOffDTO dayOffDTO,
+			HttpSession session,
+			CalendarDTO calendarDTO
+	){
 		ModelAndView mav = new ModelAndView();
+		AdminStuController astu = new AdminStuController();
 		String tea_id = (String) session.getAttribute("tea_id");
 	    examDTO.setTea_id(tea_id);
+	    dayOffDTO.setTea_id(tea_id);
+		Map<String, Object> teaMainInfoMap = getMainInfoList(examDTO,dayOffDTO);
 		mav.setViewName("teaMain.jsp");
-		return mav;
-	}
+	    mav.addObject("teaMainInfoMap", teaMainInfoMap);
+		return mav;}
 	
+
+	   public Map<String, Object> getMainInfoList(
+			   ExamDTO examDTO 
+			   ,DayOffDTO dayOffDTO	) {
+		 Map<String, Object> resultMap = new HashMap<String, Object>();
+		 List<Map<String, Object>> ClassList; 
+		 List<Map<String, String>> ExamList; 
+		 List<Map<String, String>> DayoffList; 
+
+		 
+		 ExamList = this.mainDAO.getExamInfoList(examDTO);
+		 DayoffList = this.mainDAO.getDayOffInfoList(dayOffDTO);
+		 ClassList = this.calendarDAO.getCalendar();
+
+		 resultMap.put("ExamList", ExamList); 
+		 resultMap.put("DayoffList", DayoffList); 
+		 resultMap.put("ClassList", ClassList);
+		 return resultMap; 
+		 }
 	
 	@RequestMapping( value="/registExample.do")
 	public ModelAndView registExample(

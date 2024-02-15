@@ -288,10 +288,8 @@ body {
   font-size: 50px;
 }
 .list_box {
-  overflow-y: scroll
 }
 .document_box {
-  overflow-y: scroll
 }
 .list_notice {
   color:#a5a1a1;
@@ -338,7 +336,6 @@ body {
 }
 .middle {
   width: 80%; height: 75%;
-  overflow-y: scroll;
 }
 .middle::-webkit-scrollbar {
   display: none;
@@ -348,20 +345,20 @@ body {
   scrollbar-width: none;  /* Firefox */
 }
 .flex{
-	padding : 15px;
-	text-align: center;
+   padding : 15px;
+   text-align: center;
 }
 .flex > div:not(.status) {
-	width:25%;	
+   width:25%;   
 }
 
 .flex > .status{
-	width:13%;	
+   width:13%;   
     font-weight: bold;
     line-height: 5px;
     background: #a4a4a4;
     color: #fff;
     padding: 10px 8px;
     border-radius: 2px;
-	
+
 }

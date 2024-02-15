@@ -3,7 +3,7 @@
 
 <mapper namespace="com.naver.erp.CalendarDAO">
 
-   <!-- 일정 추가 -->
+<!-- 일정 추가시 들어가야됨. -->
    <insert id="insertCalendar"  parameterType="com.naver.erp.CalendarDTO">
 	  insert into ATTENDCHECK(
            att_id, 
@@ -31,7 +31,7 @@
       </delete> 
        
        
-       <!-- 학생 캘린더 -->
+       <!-- 학생 캘린더로 보여야 할것. -->
         <select id="selectCalendar" parameterType="Map" resultType="java.util.Map" >
 	   		select 
 	   		a.ATT_ID "att_id" 
@@ -44,8 +44,8 @@
           </select> 
           
           
-          <!-- 강사 캘린더 -->
-           <select id="getCalendar" parameterType="Map" resultType="java.util.Map" >
+          <!--  강사 캘린더 보여야할거 -->
+           <select id="getCalendar" resultType="java.util.Map" >
              select 
            a.ATT_ID "att_id"  
            ,s.stu_name  "stu_name"

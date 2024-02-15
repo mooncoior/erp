@@ -374,3 +374,27 @@ section > span{
   display: none;
   font-size: 12px;
 }
+.choice > div{
+
+	 top: 50%;left: 50%;
+	font-size: 20px;
+  padding: 0 0 10px;
+	border: 2px solid lightgray;
+  background-color:#F2F2F2;
+  width: 70px; height: 45px;
+  cursor: pointer;
+  color: dimgray;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+section > span{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: gold;
+  width: 50px;
+  margin-left:5px;
+  cursor:pointer;
+  border:1px  solid #A4A4A4;
+  font-weight: bold;
+}

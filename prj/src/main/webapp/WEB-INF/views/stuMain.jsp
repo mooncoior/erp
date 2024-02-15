@@ -6,7 +6,7 @@
 <html>
 <head>
 <title>학생페이지</title>
-<link href="css/stuList.css" rel="stylesheet">
+<link href="css/mainpage.css" rel="stylesheet">
 <link rel="stylesheet" href="/js/main.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/js/main.min.js"></script>
@@ -58,12 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
        		</c:if>
             </c:forEach>
             ],
-            editable: true
+            editable: true,
         });
         calendar.render();
     });
 
- 
+function godayForm(){
+    document.dayOffFormLink.submit();
+ }
 </script>
 		<body>
 				<form name="stuSearch" class="header">
@@ -95,29 +97,77 @@ document.addEventListener('DOMContentLoaded', function() {
 			<div onscroll="checkScroll(this)">
 				<form name="CalendarForm" class="boardForm">
 					<header>
-					🌈반갑습니다 ${stu_id}님
+					반갑습니다 ${stu_id}님
 					</header>
-<div  style="width: 1300px">
-<div  style="width: 600px;height: 600px;border: 2px solid lightgray;  text-align:center; float: left; padding:5px; background-color: white"><b>출석 현황</b><br>
-					<div id='calendar'></div>
-					</div>
-					<div style="width: 600px;margin-left:10px ; height: 600px; border: 2px solid lightgray;  text-align:center; float: left; padding:11px ;background-color: white">
-					<b>수업 참여율</b> 
-					<br><br><br>
-					<canvas id=chart></canvas>
-					<br>
+					<div class="main_info" style="width: 1300px; ">
+					 <div class="notice_box" style="height: 600px; ">
+			          <div class="box_title">
+			            출석 현황 
+			            <div class="doc_more more" style="cursor: pointer;" onclick="location.replace('/stuList.do')">
+			              <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+			            </div>
+			          </div>
+			          <div >
+			             <form class="boardForm">
+						<div id='calendar'></div>
+			             </form>
+			          </div>
+			        </div>
+			        <div class="notice_box" style="height: 600px; ">
+			          <div class="box_title">
+			            수업 참여율 
+			            <div class="doc_more more" style="cursor: pointer;" onclick="location.replace('/stuList.do')">
+			              <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+			            </div>
+			          </div>
+			          <div class="list">
+			             <form  class="boardForm">
+						<canvas id=chart style="margin-top: 15%"></canvas>
+			             </form>
+			          </div>
+			        </div>
+			        </div>
+			        <div class="main_info">
+			        <div class="notice_box" style="height: 350px; " >
+			          <div class="box_title">
+			            다가오는 시험정보
+			            <div class="doc_more more" style="cursor: pointer;" onclick="location.replace('/stuList.do')">
+			              <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+			            </div>
+			          </div>
+			          <div class="flex">
+			             <form class="boardForm">
+						<c:forEach var="exam" items="${exam}" varStatus="vs">
+					<c:if test="${sessionScope.stu_id==stu_id}" >
+					<li style="font-size: 13px; margin-top: 20%">시험여부 : ${exam.is_end} / 시험명 : ${exam.exam_name} / 시험날짜 : ${exam.exam_date} / 담당강사 : ${exam.tea_name}</li><br>
+					 </c:if>
+					</c:forEach>
+			             </form>
+			          </div>
+			        </div>
+			        <div class="notice_box" style="height: 350px; ">
+			          <div class="box_title">
+			            <b>휴가 신청 현황</b>
+			            <div class="doc_more more" style="cursor: pointer;" onclick="location.replace('/stuList.do')">
+			              <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+			            </div>
+			          </div>
+			          <div class="flex">
+			             <form class="boardForm">
+						<c:forEach var="stu" items="${stu}" varStatus="vs" end="5">
+					<c:if test="${sessionScope.stu_id==stu.stu_id}" >
+					<li style="font-size: 13px;">이름 : ${stu.stu_name} / 신청일 : ${stu.application_date} / 종류 : ${stu.dayoff_kind} / 승인여부 : ${stu.payment_status}</li><br>
+					</c:if>
+					</c:forEach>
+					<span onclick="godayForm()" style="cursor: pointer;font-size: 13px; color: blue;">더보기</span>
+			             </form>
+			          </div>
+			        </div>
+			        </div>
+			        </div>
 				
-					</div>
-					<div style="width: 1300px ">
-					<div style="width: 600px;margin-top: 20px; height: 600px; border: 2px solid lightgray;  text-align:center; float: left; padding:11px;background-color: white"><b>시험정보</b><br>
-					시험응시 현황 및 예정일자<br>
-					성적 확인 여부 등</div>
-					<div style="width: 600px; margin-top: 20px;height: 600px;margin-left:10px ; border: 2px solid lightgray;  text-align:center; float: left; padding:11px;background-color: white"><b>휴가 신청 현황</b><br>
-					신청한 휴가<br>휴가 결재 신청 현황등</div>
-					</div>
-				</form>			
-			</div>
-</body>
+			<form name="dayOffFormLink" method="post" action="/dayOff.do"></form> 
+ </body>
 <script>
 var ATTEND_DATE = [];
 <c:forEach var="map" items="${selectCalendarMap.selectCalendar}" varStatus="vs">

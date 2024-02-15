@@ -94,5 +94,36 @@
 		   ,tea_dayoff_kind
 		from tea_dayoff df
     </select>
-	<!-- 서니 -->
+
+
+	<select id="getExamInfoList" parameterType="com.naver.erp.ExamDTO" resultType="java.util.Map" >		
+		select
+	  	EXAM_ID       			"exam_id"
+	  	,EXAM_NAME    			"exam_name"
+	 	 ,to_char(EXAM_DATE,'yyyy-mm-dd')    "exam_date"  
+	 	<![CDATA[
+		    ,case
+		     when  to_char(exam_date,'yyyy-mm-dd') < to_char(sysdate,'yyyy-mm-dd') then '응시 종료'    
+		     when  to_char(exam_date,'yyyy-mm-dd') = to_char(sysdate,'yyyy-mm-dd') then '응시 중'  
+		     when  to_char(exam_date,'yyyy-mm-dd') > to_char(sysdate,'yyyy-mm-dd') then '응시 전'       
+	         end "is_end"
+	    ]]>
+	  	,(select class_name from class cla where cla.class_id = e.class_id)   "class_name"
+		from EXAM e
+		where
+			tea_id=#{tea_id}
+	</select>
+	
+	<select id="getDayOffInfoList" parameterType="com.naver.erp.DayOffDTO" resultType="java.util.Map" >		
+		select 
+		DAY_ID             
+		,(select tea_name from teacher t where t.tea_id = d.tea_id)   "tea_name"             
+		  ,to_char(APPLICATION_DATE,'yyyy-mm-dd') "application_date"   
+		  ,DAYOFF_START   	"dayoff_start"    
+		  ,DAYOFF_END       "dayoff_end"   
+		  ,PAYMENT_STATUS   "payment_status"            
+		  ,TEA_DAYOFF_KIND	"tea_dayoff_kind"
+		from tea_dayoff   d
+		where tea_id = #{tea_id}
+	</select>
 </mapper>

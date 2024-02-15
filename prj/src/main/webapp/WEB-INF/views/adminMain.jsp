@@ -35,6 +35,7 @@ function init(){
             ]);
 
             var options = {
+            		 pieSliceText: '명'
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechart1'));

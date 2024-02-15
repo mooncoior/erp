@@ -51,6 +51,8 @@ select
 <select id="getStuOff" resultType="java.util.Map" >
 select
 	d.day_id		"day_id"
+	,(select stu_name from student st where st.stu_id= d.stu_id) "stu_name" 
+	,d.stu_id  "stu_id"          
 	,(select stu_name from student st where st.stu_id= d.stu_id) "stu_name"                     
     ,to_char(d.APPLICATION_DATE,'yyyy-mm-dd')         "application_date"  
     ,to_char(d.DAYOFF_START,'yyyy-mm-dd')             "dayoff_start"

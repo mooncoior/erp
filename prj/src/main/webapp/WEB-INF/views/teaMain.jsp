@@ -1,12 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@include file="/WEB-INF/views/common.jsp"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!doctype html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="css/mainpage.css">
+<link rel="stylesheet" href="/js/main.min.css">
+<script src="/js/main.min.js"></script>
+ <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script>
@@ -14,61 +18,57 @@
 $(function(){init();})
 
 function init(){ 
+	 window.onpageshow = function(event) {
+		   if (event.persisted) {
+		              ﻿location.reload(true);﻿
+			    }
+			}
+			$(window).bind("pageshow", function(event) {
+			if (event.originalEvent && event.originalEvent.persisted){
+			              //todo
+			              ﻿location.reload(true);﻿
+			    }
+			});
 }
 
- function search(){
-   ajax(
-         "/boardList.do"
-         ,"post"
-         ,$("[name='boardSearchForm']")
-         ,function(responseHtml){
-            var obj = $(responseHtml);
-            var searchResultCnt = obj.find(".searchResultCnt").html();
-            var searchResult = obj.find(".search_list").html();
 
-            var html = 
-            '<div class="isEmpty"><i class="fa fa-search" aria-hidden="true"></i>검색 결과가 없습니다.</div>';
-
-            $(".searchResultCnt").html( searchResultCnt );
-            $(".search_list").html( searchResult );
-            
-            
-         }
-   );
-   
-} 
-function gyeoljae(){
-
-   ajax(
-         "/gyeoljaeList.do"
-         ,"post"
-         ,$("[name='gyeoljaeSearchForm']")
-         ,function(responseHtml){
-            var obj = $(responseHtml);
-            var searchResultCnt = obj.find(".searchResultCnt2").html();
-            var searchResult = obj.find(".search_list").html();
-
-            var html = 
-            '<div class="isEmpty"><i class="fa fa-search" aria-hidden="true"></i>검색 결과가 없습니다.</div>';
-
-            $(".searchResultCnt2").html( searchResultCnt );
-            $(".search_list_all").html( searchResult );
-            
-         }
-   );
-}
-
-function goBoardDetailForm(b_no){
-   $("[name='boardDetailForm'] [name='b_no']").val(b_no);
-   
-   document.boardDetailForm.submit();
-}
-
-function goGyeoljaeDetailForm(gyeoljae_num){
-   $("[name='gyeoljaeDetailForm'] [name='gyeoljae_num']").val(gyeoljae_num);
-   document.gyeoljaeDetailForm.submit();
-}
-
+document.addEventListener('DOMContentLoaded', function() {
+	
+    var calendarEl = document.getElementById('calendar');
+    	var calendar = new FullCalendar.Calendar(calendarEl, {
+    		initialView: 'dayGridMonth',
+    		
+    		headerToolbar: {
+    		      left: 'prevYear,prev',
+    		      center: 'title',
+    		      right: 'next,nextYear today'
+    		    }, 
+    		    locale:'ko',
+    		    timeZone: 'Asia/Seoul',
+            events:[ <c:forEach var="calendar" items="${teaMainInfoMap.ClassList}" varStatus="vs">
+            {
+            	id:"${calendar.att_id}",
+            	title:"${calendar.stu_name}"+"-"+"${calendar.attend_status}",
+                start:"${calendar.attend_date}",
+                color:
+                <c:if test="${calendar.attend_status eq '출석'}">
+                "blue"
+                </c:if>
+                <c:if test="${calendar.attend_status eq '결석'}">
+                "red"
+                </c:if>
+                <c:if test="${calendar.attend_status eq '조퇴'}">
+                "gold"
+                </c:if>
+                <c:if test="${calendar.attend_status eq '지각'}">
+                "green"
+                </c:if>
+       		},
+            </c:forEach>
+            ]
+        });
+        calendar.render();
+    });
 </script>
 
 <title>메인</title>
@@ -111,23 +111,9 @@ function goGyeoljaeDetailForm(gyeoljae_num){
           </div>
           <div class="list">
 	          <form name="boardSearchForm" class="boardForm">
-	            <span  style="display:none;" class="searchResultCnt" >
-	          	</span>
+	            
+	            <div id="calendar" style="width: 70%">
 	          </form>
-          </div>
-        </div>
-        
-        <div class="document_box">
-          <div class="box_title">근무 스케쥴
-            <div class="notice_more more" onclick="location.replace('/??.do')">
-              <i class="fa fa-plus-square-o" aria-hidden="true"></i>
-            </div>
-          </div>
-          <div class="list">
-           <form name="gyeoljaeSearchForm" class="boardForm" action="hh">
-           	<span class="searchResultCnt" style="display:none;">
-         	</span>  
-           </form>
           </div>
         </div>
         </div>
@@ -140,8 +126,14 @@ function goGyeoljaeDetailForm(gyeoljae_num){
           </div>
           <div class="list">
            <form name="gyeoljaeSearchForm" class="boardForm" action="hh">
-           	<span class="searchResultCnt" style="display:none;">
-         	</span>  
+			<c:forEach var="ExamList" items="${teaMainInfoMap.ExamList}" varStatus="vs">
+           			<div>${ExamList.is_end}</div>
+           			<div>${ExamList.exam_name}</div>
+         			<div>${ExamList.exam_date}</div>
+         			<div>${ExamList.class_name}</div>
+           </c:forEach>
+           
+         	  
            </form>
           </div>
         </div>
@@ -153,19 +145,17 @@ function goGyeoljaeDetailForm(gyeoljae_num){
           </div>
           <div class="list">
            <form name="gyeoljaeSearchForm" class="boardForm" action="hh">
-           	<span class="searchResultCnt" style="display:none;">
-         	</span>  
+           	<c:forEach var="DayoffList" items="${teaMainInfoMap.DayoffList}" varStatus="vs">
+           			<div>${DayoffList.tea_name}</div>
+           			<div>${DayoffList.application_date}</div>
+           			<div>${DayoffList.payment_status}</div>
+           			<div>${DayoffList.tea_dayoff_kind}</div>
+           </c:forEach>
            </form>
           </div>
         </div>
       </div>
     </div>
-    <form name="boardDetailForm" action="/boardDetailForm.do" post="post">
-     <input type="hidden" name="b_no">
-    </form>
-    <form name="gyeoljaeDetailForm" action="/gyeoljaeDetailForm.do" post="post">
-     <input type="hidden" name="gyeoljae_num">
-    </form>
   
 </body>
 </html>

@@ -279,7 +279,7 @@ public class DayOffController {
 						pagingMap = Util.getPagingMap(
 								dayoffDTO.getSelectPageNo()
 								, dayoffDTO.getRowCntPerPage()
-								, dayoffListCnt
+								, dayoffListCntAll
 						);
 						
 
